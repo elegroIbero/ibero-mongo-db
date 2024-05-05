@@ -1,0 +1,25 @@
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=clave123
+      - MONGO_INITDB_DATABASE=dbibero
+    volumes:
+      - ./data:/data/db
+    ports:
+      - 27017:27017
+    networks:
+      - redlocal
+    command: mongod
+
+volumes:
+  data: {}
+  test: {}
+
+networks:
+  redlocal:
+    name: "redlocal"
+    driver: bridge

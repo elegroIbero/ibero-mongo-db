@@ -71,22 +71,19 @@ db.getCollection("deportistas").insertMany([
 		cid: 111402100,
 		nomdep: "Mariana Capera",
 		edad: 18,
-		equipo_id: "E4",
-		date: new Date("2016-02-06T20:20:13Z"),
+		equipo_id: "E4"
 	},
 	{
 		cid: 812230000,
 		nomdep: "Karen Mendez",
 		edad: 17,
-		equipo_id: "E4",
-		date: new Date("2016-02-06T20:20:13Z"),
+		equipo_id: "E4"
 	},
 	{
 		cid: 871222332,
 		nomdep: "Susana Restrepo",
 		edad: 19,
-		equipo_id: "E4",
-		date: new Date("2016-02-06T20:20:13Z"),
+		equipo_id: "E4"
 	},
 ]);
 
@@ -95,22 +92,19 @@ db.getCollection("deportistas").insertMany([
 		cid: 7500760,
 		nomdep: "Ramon Ramirez",
 		edad: 44,
-		equipo_id: "E5",
-		date: new Date("2016-02-06T20:20:13Z"),
+		equipo_id: "E5"
 	},
 	{
 		cid: 8922340,
 		nomdep: "El Doctor Gallego",
 		edad: 54,
-		equipo_id: "E5",
-		date: new Date("2016-02-06T20:20:13Z"),
+		equipo_id: "E5"
 	},
 	{
 		cid: 9822324,
 		nomdep: "Beto Sanchez",
 		edad: 48,
 		equipo_id: "E5",
-		date: new Date("2016-02-06T20:20:13Z"),
 	},
 ]);
 
