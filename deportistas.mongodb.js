@@ -1,7 +1,7 @@
 /* global use, db */
 // MongoDB Playground
 
-use("db_by_tejote");
+use("dbibero");
 
 db.deportistas.drop();
 

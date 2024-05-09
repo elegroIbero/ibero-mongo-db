@@ -1,4 +1,4 @@
-use("db_by_tejote");
+use("dbibero");
 
 db.encuentroResultados.drop();
 
