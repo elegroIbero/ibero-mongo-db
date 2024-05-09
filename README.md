@@ -35,4 +35,4 @@ Sarasa, A. (2016). Introducción a las bases de datos NoSQL usando MongoDB. Edit
 
 ## Video
 
-### <a href="https://laiberocol.sharepoint.com/:v:/s/BasesMongo/EfB9GXQhWyZNhdXdLhTReJABVf6wF8LPFKE2AEDTxtDj7A?e=rRBhMt">Ingresa para ver el video de explicación de la actividad.</a>
+### <a href="https://laiberocol.sharepoint.com/:v:/s/BasesMongo/EdmCxGD-oA5JpiHHucF2dBIBrrmmAiQVPm6GnhvXLLM1Rw?e=lZf6iU">Ingresa para ver el video de explicación de la actividad.</a>
