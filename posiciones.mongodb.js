@@ -1,5 +1,5 @@
 
-use('db_by_tejote');
+use("dbibero");
 
 db.posiciones.drop();
 

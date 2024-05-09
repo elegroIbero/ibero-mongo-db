@@ -1,4 +1,4 @@
-use('db_by_tejote');
+use("dbibero");
 
 /**
  * El equipo que hizo más puntos

@@ -2,6 +2,9 @@ use("dbibero");
 
 db.encuentroResultados.drop();
 
+db.encuentroResultados.createIndex({ equipo_id: 1 });
+db.encuentroResultados.createIndex({ encuentro_id: 1, puntos: -1 });
+
 db.encuentroResultados.insertMany([
 	{ encuentro_id: 1, puntos: 3, equipo_id: "E1", deportista: 111049192 },
 	{ encuentro_id: 1, puntos: 6, equipo_id: "E2", deportista: 111023230 },
