@@ -1,6 +1,6 @@
 /* global use, db */
 
-use("db_by_tejote");
+use("dbibero");
 
 
 db.encuentros.drop();
