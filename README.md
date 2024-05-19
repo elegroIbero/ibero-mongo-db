@@ -3,7 +3,6 @@
 ### Grupo de trabajo:
 
 ---
-
 - EDWIN ANDRES LEGRO AGUDELO
 - WILMER ARMANDO SIZA MORA
 - JEISSON EDUARDO BELTRAN
@@ -12,7 +11,7 @@
 
 - WILLIAM RUIZ 22042024 C2 202431
 
-### Actividad 1
+### Actividad 2
 
 La siguiente actividad pretende acercarlos de manera práctica a los conceptos de bases de datos NoSQL a través de la solución de un caso práctico.  
 Para el desarrollo de esta actividad, tenga en cuenta lo siguiente:
@@ -33,6 +32,81 @@ Sarasa, A. (2016). Introducción a las bases de datos NoSQL usando MongoDB. Edit
 
 * Subir la actividad en el enlace que corresponde para la entrega de la tarea, indicando el link del repositorio Git y del video.
 
-## Video
+## Video 1
+
+### <a href="https://laiberocol.sharepoint.com/:v:/s/BasesMongo/EdmCxGD-oA5JpiHHucF2dBIBrrmmAiQVPm6GnhvXLLM1Rw?e=lZf6iU">Ingresa para ver el video de explicación de la actividad.</a>
+
+
+## Mongo 4.4 Replicación
+
+Comandos necesarios para realizar configuración de la replicación 
+- Condiciones previas del proceso
+  ```sh
+  sudo systemctl enabled mongod.service
+  sudo systemctl start mongod.service
+
+  sudo mkdir replication 
+  sudo mkdir -p replication/db1 replication/db2 replication/db3
+  sudo chown -R mongodb:mongodb replication/db* 
+  ```
+
+- Crear las instancias de replicacion RS Puertos (27017, 27018, 27019)
+  ```sh
+  sudo mongod --port 27017 --dbpath replication/db1 --replSet RS --bind_ip localhost --fork --logpath /var/log/mongodb/db1.log
+  sudo mongod --port 27018 --dbpath replication/db2 --replSet RS --bind_ip localhost --fork --logpath /var/log/mongodb/db2.log
+  sudo mongod --port 27019 --dbpath replication/db3 --replSet RS --bind_ip localhost --fork --logpath /var/log/mongodb/db3.log
+  mongo --port 27017
+
+  rs.initiate({ _id:"RS", members: [ { _id: 0, host: "localhost:27017"}, { _id: 1, host: "localhost:27018"}, { _id: 2, host: "localhost:27019"}]})
+  rs.status()
+  rs.conf()
+  use dbibero
+  db.equipos.insertMany([
+    { cid: "E1", nomequ: "Los Tejanos", date: new Date("2014-03-01T08:00:00Z") },
+    { cid: "E2", nomequ: "El Equipo Maravilla", date: new Date("2014-03-01T09:00:00Z") },
+    { cid: "E3", nomequ: "Los Del EDEN", date: new Date("2014-03-15T09:00:00Z") },
+    { cid: "E4", nomequ: "Las Barbies", date: new Date("2014-03-15T09:00:00Z") },
+    { cid: "E5", nomequ: "Los Profesionales", date: new Date("2014-03-15T09:00:00Z") },
+  ]);
+  db.equipos.find();
+  exit
+  sudo ss -tulnp | grep mongod 
+  ```
+
+- Provamos la replica _id= 1 que se expone en el puerto 27018
+  ```sh
+  # Aplica Mongo-V4
+  mongo --port 27018
+  rs.status() 
+  rs.conf() 
+  rs.secondaryOk()
+  use dbibero
+  db.equipos.find();
+  exit;
+
+  # Mostrar los procesos que corren y los respectivos puertos en uso  
+  sudo ss -tulnp | grep mongod 
+  ```
+
+- Matamos la instancia (Primary) y provamos
+  ```sh
+  #Matamos el proceso de linux que se expone en el puerto 27017 Primary Instancia
+  sudo kill -9 221760
+  sudo ss -tulnp | grep mongod 
+
+  #Se realiza la prueba de conexión
+  mongo V4.4
+  URL: mongodb://localhost:27017,localhost:27018,localhost:27019/dbibero
+  ```
+
+## Video 2 Replicación
+
+### Requerimientos No Funcionales
+* La replicación de datos 
+* Balanceo de carga 
+* Alta disponibilidad 
+* Recuperación ante desastres 
+* Actualizaciones y parches 
+* Monitorización 
 
 ### <a href="https://laiberocol.sharepoint.com/:v:/s/BasesMongo/EdmCxGD-oA5JpiHHucF2dBIBrrmmAiQVPm6GnhvXLLM1Rw?e=lZf6iU">Ingresa para ver el video de explicación de la actividad.</a>
