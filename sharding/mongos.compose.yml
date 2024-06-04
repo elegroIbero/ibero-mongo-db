@@ -1,0 +1,15 @@
+services:
+  mongos:
+    container_name: mongos
+    image: mongo:4.4.8-focal
+    command: mongos --configdb cfgrs/cfg1:27017,cfg2:27017,cfg3:27017 --bind_ip 0.0.0.0 --port 27017
+    ports:
+      - 127.0.0.1:60000:27017
+    networks:
+      - netmongo
+
+networks:
+  netmongo:
+    name: "netmongo"
+    driver: bridge
+    external: true

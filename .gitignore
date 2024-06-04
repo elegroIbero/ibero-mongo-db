@@ -1,3 +1,12 @@
 node_modules/
 data/
 .vscode/
+sharding/cfg1/
+sharding/cfg2/
+sharding/cfg3/
+sharding/frag1/
+sharding/frag2/
+sharding/frag3/
+sharding/shard1/
+sharding/shard2/
+sharding/shard3/

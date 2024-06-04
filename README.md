@@ -25,21 +25,21 @@ cluster = new ShardingTest({shards: 3, chunksize:1})
 # En una nueva shell volvemnos a ingresar
 mongo mongodb://127.0.0.10:27017
 # Creamos una nueva instancia en el puerto 20006 donde alojamos la base de datos
-db = (new Mongo("127.0.0.10:20006")).getDB("Integrantes")
+db = (new Mongo("127.0.0.10:20006")).getDB("integrantes")
 # Ingresamos los registros a la tabla
-for (i = 0; i < 2000000; i++) db.Jugador.insert({player:"player"+i});
+for (i = 0; i < 200000; i++) db.jugador.insert({player:"player"+i});
 ```
 
 ```sh
 # En una nueva shell volvemnos a ingresar, para configurar nuestro shard
 mongo mongodb://127.0.0.10:20006
-use Integrantes
-db.Jugador.count()
+use integrantes
+db.jugador.count()
 
 # Iniciamos la configuracion de la collection y habilitamos sharding
-sh.enableSharding("Integrantes") 
-db.Jugador.ensureIndex({player: 1}) 
-sh.shardCollection("Integrantes.Jugador", {player: 1}) 
+sh.enableSharding("integrantes") 
+db.jugador.ensureIndex({player: 1}) 
+sh.shardCollection("integrantes.jugador", {player: 1}) 
 sh.getBalancerState() 
 sh.setBalancerState(true) 
 sh.isBalancerRunning() 
@@ -152,6 +152,101 @@ Comandos necesarios para realizar configuración de la replicación
   mongo V4.4
   URL: mongodb://localhost:27017,localhost:27018,localhost:27019/dbibero
   ```
+
+## Usando Docker compose.yml
+```yml
+services:
+  mongo:
+    image: mongo:4.4.8-focal
+    container_name: mongo
+    restart: always
+    networks:
+      - netmongo
+    ports:
+      - 127.0.0.11:27017:27017
+    command: mongod --port 27017 --dbpath /data/db --bind_ip 0.0.0.0
+
+  replica1:
+    image: mongo:4.4.8-focal
+    container_name: replica1
+    restart: always
+    networks:
+      - netmongo
+    volumes:
+      - ./replica1:/data/db
+    ports:
+      - 127.0.0.11:30001:27017
+    command: mongod --replSet rs0 --port 27017 --dbpath /data/db --bind_ip 0.0.0.0
+
+
+  replica2:
+    image: mongo:4.4.8-focal
+    container_name: replica2
+    restart: always
+    networks:
+      - netmongo
+    volumes:
+      - ./replica2:/data/db
+    ports:
+      - 127.0.0.11:30002:27017
+    command: mongod --replSet rs0 --port 27017 --dbpath /data/db --bind_ip 0.0.0.0
+
+
+  replica3:
+    image: mongo:4.4.8-focal
+    container_name: replica3
+    restart: always
+    networks:
+      - netmongo
+    volumes:
+      - ./replica3:/data/db
+    ports:
+      - 127.0.0.11:30003:27017
+    command: mongod --replSet rs0 --port 27017 --dbpath /data/db --bind_ip 0.0.0.0
+
+volumes:
+  replica1:
+  replica2:
+  replica3:
+
+networks:
+  netmongo:
+    name: "netmongo"
+    driver: bridge
+```
+
+```sh
+# instalamos el mongo shell client
+curl -fsSL https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+apt-key list
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+sudo apt update
+sudo apt install mongodb-org-mongos mongodb-org-shell
+dpkg -l | grep mongo
+
+# preparamos el directorio volumen y creamos los contenedores docker para las instancias de mongo
+mkdir replicaset
+sudo docker compose -f replicaset/compose.yml up -d
+
+# ingresamos a una de los contenedores al mongo shell
+docker exec -it replica1 mongo
+
+#configuramos la replicacion
+config = { _id:"rs0",  members: [{ _id: 0, host: "replica1:27017"}, { _id: 1, host: "replica2:27017"}, { _id: 2, host: "replica3:27017"}]}
+rs.initiate(config)
+db
+rs.status() 
+rs.conf() 
+
+# creamos un usuario admin para poder acceder desde fuera del contenedor
+use admin
+config_admin = { user: "elegro", pwd: "p2024", roles: [ { role: "userAdminAnyDatabase", db: "admin"}]}
+db.createUser(config_admin)
+
+# probamos el acceso desde fuera del contenedor
+mongo mongodb://127.0.0.11:30001 -u elegro -p
+```
+
 
 ## Video 2 Replicación
 
