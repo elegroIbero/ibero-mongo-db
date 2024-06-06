@@ -148,3 +148,23 @@ ps -ef | grep mongo
 
 PATH mongodb://127.0.0.1:60000,127.0.0.1:50001,127.0.0.1:50004/dbibero
 ```
+
+
+## Monitoreo mongodb
+
+### Monitoreo usando Mongostat
+
++ “(mongostat) es una herramienta de línea de comandos que proporciona una descripción general rápida del estado de una instancia mongod o ejecución actualmente mongos. Úselo mongostat para ayudar a identificar cuellos de botella en el sistema. El mongostat es funcionalmente similar a la utilidad del sistema de archivos UNIX/Linux vmstat, pero proporciona datos sobre mongod instancias mongos . Ejecuta mongostat desde la línea de comando del sistema, no desde el mongo shell”.
+
+```sh
+mongostat mongodb://root:p2024@127.0.0.10:60000/dbibero
+```
+
+### Monitoreo usando Mongotop
+
++ “(mongotop) es una herramienta de línea de comandos que proporciona un método para realizar un seguimiento de la cantidad de tiempo que una instancia de MongoDB mongod dedica a leer y escribir datos. mongotop proporciona estadísticas a nivel de colección. De forma predeterminada, mongotop devuelve valores cada segundo”.
+```sh
+mongotop 30 --uri='mongodb://root:p2024@127.0.0.1:60000/dbibero?authSource=admin'
+```
+
+ 

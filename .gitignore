@@ -10,3 +10,6 @@ sharding/frag3/
 sharding/shard1/
 sharding/shard2/
 sharding/shard3/
+sharding/configsvr/
+sharding/shard1rs/
+sharding/shard2rs/
