@@ -51,8 +51,10 @@ sudo docker compose -f mongos.compose.yml up -d
 
 docker exec -it mongos mongo
 use admin
-config_admin = { user: "elegro", pwd: "p2024", roles: [ { role: "userAdminAnyDatabase", db: "admin"}]}
+config_admin = { user: "wilmer", pwd: "p2024", roles: [ { role: "userAdminAnyDatabase", db: "admin"}, { role: "readWrite", db: "dbibero"}]}
 db.createUser(config_admin)
+
+mongo --host 127.0.0.1 --port 60000 -u wilmer -p p2024 --authenticationDatabase admin
 
 # Desactive el balanceador. usando sh.stopBalancer() y
 # Conecte un mongo shell a una mongos instancia en el clúster fragmentado y ejecútelo sh.stopBalancer() para deshabilitar el balanceador:
@@ -67,7 +69,7 @@ sh.addShard("shard2rs/frag1:27017,frag2:27017,frag3:27017")
 sh.status()
 exit
 
-mongo mongodb://127.0.0.10:60000 -u elegro -p
+mongo mongodb://127.0.0.10:60000 -u wilmer -p
 ```
 
 ### Iniciamos el balanceador de cargas
@@ -133,7 +135,7 @@ db.deportistas.getShardDistribution()
 ### Usando conexion mongodb mongo client
 
 ```sh
-mongo mongodb://127.0.0.10:60000 -u elegro -p
+mongo mongodb://127.0.0.10:60000 -u wilmer -p
 
 shard1 = new Mongo("127.0.0.10:50001")
 shard1db = shard1.getDB("dbibero")
@@ -149,22 +151,28 @@ ps -ef | grep mongo
 PATH mongodb://127.0.0.1:60000,127.0.0.1:50001,127.0.0.1:50004/dbibero
 ```
 
-
 ## Monitoreo mongodb
 
 ### Monitoreo usando Mongostat
 
-+ “(mongostat) es una herramienta de línea de comandos que proporciona una descripción general rápida del estado de una instancia mongod o ejecución actualmente mongos. Úselo mongostat para ayudar a identificar cuellos de botella en el sistema. El mongostat es funcionalmente similar a la utilidad del sistema de archivos UNIX/Linux vmstat, pero proporciona datos sobre mongod instancias mongos . Ejecuta mongostat desde la línea de comando del sistema, no desde el mongo shell”.
+- “(mongostat) es una herramienta de línea de comandos que proporciona una descripción general rápida del estado de una instancia mongod o ejecución actualmente mongos. Úselo mongostat para ayudar a identificar cuellos de botella en el sistema. El mongostat es funcionalmente similar a la utilidad del sistema de archivos UNIX/Linux vmstat, pero proporciona datos sobre mongod instancias mongos . Ejecuta mongostat desde la línea de comando del sistema, no desde el mongo shell”.
 
 ```sh
-mongostat mongodb://root:p2024@127.0.0.10:60000/dbibero
+mongostat mongodb://wilmer@127.0.0.1:60000/dbibero?authSource=admin
+
+mongo --host 127.0.0.1 --port 60000 -u wilmer -p p2024 --authenticationDatabase admin
 ```
 
 ### Monitoreo usando Mongotop
 
-+ “(mongotop) es una herramienta de línea de comandos que proporciona un método para realizar un seguimiento de la cantidad de tiempo que una instancia de MongoDB mongod dedica a leer y escribir datos. mongotop proporciona estadísticas a nivel de colección. De forma predeterminada, mongotop devuelve valores cada segundo”.
+- “(mongotop) es una herramienta de línea de comandos que proporciona un método para realizar un seguimiento de la cantidad de tiempo que una instancia de MongoDB mongod dedica a leer y escribir datos. mongotop proporciona estadísticas a nivel de colección. De forma predeterminada, mongotop devuelve valores cada segundo”.
+
 ```sh
-mongotop 30 --uri='mongodb://root:p2024@127.0.0.1:60000/dbibero?authSource=admin'
+mongotop 30 --uri='mongodb://wilmer@127.0.0.13:50001/dbibero?authSource=admin'
 ```
 
- 
+- Ejecutar mongotop contra una instancia mongos en un entorno de clúster compartido de MongoDB no es compatible. mongotop está diseñado para proporcionar un informe de la actividad de lectura y escritura en una instancia de MongoDB, pero solo puede hacerlo para los procesos mongod, no para los procesos mongos.
+
+- mongos es el servicio de enrutamiento para el particionamiento (sharding) de MongoDB, que dirige las operaciones al fragmento adecuado, pero no maneja directamente los datos. Por lo tanto, mongotop no puede proporcionar estadísticas significativas cuando se apunta a una instancia mongos.
+
+- Con el comando db.adminCommand({ top: 1 }) no está disponible en una instancia mongos. El comando top es específico de los procesos mongod y no se puede ejecutar en mongos, que es el enrutador en un clúster de MongoDB.

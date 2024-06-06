@@ -1,10 +1,5 @@
 #!/bin/sh
 
-# Variables
-ip_cfgrs="127.0.0.12"
-ip_shards_01="127.0.0.13"
-ip_shards_02="127.0.0.14"
-
 # Detener todos los procesos mongod y mongos
 stop_mongo_processes() {
   echo "Deteniendo todos los procesos de mongod y mongos..."
