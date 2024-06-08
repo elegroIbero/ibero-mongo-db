@@ -1,0 +1,44 @@
+services:
+  shard1:
+    container_name: shard1
+    image: mongo:4.4.8-focal
+    networks:
+      - netmongo
+    ports:
+      - 127.0.0.1:50001:27017
+    volumes:
+      - ./shard1:/data/db
+    command: mongod --shardsvr --replSet shard1rs --port 27017 --dbpath /data/db --bind_ip 0.0.0.0
+
+  shard2:
+    container_name: shard2
+    image: mongo:4.4.8-focal
+    networks:
+      - netmongo
+    ports:
+      - 127.0.0.1:50002:27017
+    volumes:
+      - ./shard2:/data/db
+    command: mongod --shardsvr --replSet shard1rs --port 27017 --dbpath /data/db --bind_ip 0.0.0.0
+
+  shard3:
+    container_name: shard3
+    image: mongo:4.4.8-focal
+    networks:
+      - netmongo
+    ports:
+      - 127.0.0.1:50003:27017
+    volumes:
+      - ./shard3:/data/db
+    command: mongod --shardsvr --replSet shard1rs --port 27017 --dbpath /data/db --bind_ip 0.0.0.0
+
+volumes:
+  shard1:
+  shard2:
+  shard3:
+
+networks:
+  netmongo:
+    name: "netmongo"
+    driver: bridge
+    external: true
