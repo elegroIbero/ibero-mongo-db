@@ -1,0 +1,44 @@
+services:
+  cfg1:
+    container_name: cfg1
+    image: mongo:4.4.8-focal
+    networks:
+      - netmongo
+    ports:
+      - 127.0.0.1:40001:27017
+    volumes:
+      - ./cfg1:/data/db
+    command: mongod --configsvr --replSet cfgrs --port 27017 --dbpath /data/db --bind_ip 0.0.0.0
+
+  cfg2:
+    container_name: cfg2
+    image: mongo:4.4.8-focal
+    networks:
+      - netmongo
+    ports:
+      - 127.0.0.1:40002:27017
+    volumes:
+      - ./cfg2:/data/db
+    command: mongod --configsvr --replSet cfgrs --port 27017 --dbpath /data/db --bind_ip 0.0.0.0
+
+  cfg3:
+    container_name: cfg3
+    image: mongo:4.4.8-focal
+    networks:
+      - netmongo
+    ports:
+      - 127.0.0.1:40003:27017
+    volumes:
+      - ./cfg3:/data/db
+    command: mongod --configsvr --replSet cfgrs --port 27017 --dbpath /data/db --bind_ip 0.0.0.0
+
+volumes:
+  cfg1:
+  cfg2:
+  cfg3:
+
+networks:
+  netmongo:
+    name: "netmongo"
+    driver: bridge
+    external: true
