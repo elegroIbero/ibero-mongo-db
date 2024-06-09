@@ -94,11 +94,11 @@ db.encuentroResultados.getShardDistribution()
 - Usando conexion mongo a los shards, para probar el funcionamiento de los shards.
 
 ```sh
-shard1 = new Mongo("127.0.0.1:50001")
+shard1 = new Mongo("127.0.0.13:50001")
 shard1db = shard1.getDB("dbibero")
 shard1db.encuentroResultados.count()
 
-shard2 = new Mongo("127.0.0.1:50004")
+shard2 = new Mongo("127.0.0.14:60001")
 shard2db = shard2.getDB("dbibero")
 shard2db.encuentroResultados.count()
 
@@ -131,7 +131,7 @@ ps -ef | grep mongo
 ### Conexion Mongo Compass
 
 ```
-Usamos la conexion mediante script: mongodb://127.0.0.1:60000,127.0.0.1:50001,127.0.0.1:50004/dbibero
+Usamos la conexion mediante script: mongodb://127.0.0.1:60000,127.0.0.13:50001,127.0.0.14:60001/dbibero
 ```
 
 ### Monitoreo usando Mongostat
@@ -169,7 +169,9 @@ $~ sudo su
 $~ sh clean_mongodb.sh
 ```
 
----
+### Video - Pruebas Sharding
+
+## <a href="https://laiberocol.sharepoint.com/:v:/s/BasesMongo/EV2bFmEcMd9Knc1Jh-YkZgkBB8NlHoj2QGA_LEdQhkzidw?e=ZWWIkZ">Actividad 4 - Pruebas Sharding</a>
 
 ...
 
